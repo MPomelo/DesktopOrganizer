@@ -2,7 +2,7 @@
 
 ![DesktopOrganizer 图标](src/DesktopOrganizer.App/Assets/DesktopOrganizer.png)
 
-DesktopOrganizer 是一个适用于 64 位 Windows 10/11 的桌面图标收纳工具，使用 .NET 8、WPF 和 Windows Shell API 开发。
+DesktopOrganizer 是一个适用于 64 位 Windows 10/11 的桌面图标收纳工具，由AI工具使用 .NET 8、WPF 和 Windows Shell API 开发。
 
 ## 下载
 
