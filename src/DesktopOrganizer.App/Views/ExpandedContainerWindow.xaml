@@ -1,0 +1,161 @@
+<Window x:Class="DesktopOrganizer.App.Views.ExpandedContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DesktopOrganizer - 全部图标"
+        Width="720"
+        Height="520"
+        MinWidth="480"
+        MinHeight="320"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        AutomationProperties.Name="全部图标"
+        Deactivated="OnWindowDeactivated"
+        PreviewKeyDown="OnWindowPreviewKeyDown"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+    <Border BorderBrush="{Binding ContainerBorderBrush}"
+            BorderThickness="{Binding ContainerBorderThickness}"
+            Background="{Binding ContainerBackgroundBrush}"
+            CornerRadius="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="{StaticResource ContainerHeaderBrush}"
+                    MouseLeftButtonDown="OnHeaderMouseLeftButtonDown">
+                <Grid Margin="16,0,8,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="36" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center"
+                               FontFamily="Microsoft YaHei UI"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               Text="{Binding Name}"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="1"
+                               Margin="12,0,12,0"
+                               VerticalAlignment="Center"
+                               FontFamily="Microsoft YaHei UI"
+                               FontSize="12"
+                               Foreground="#D9FFFFFF"
+                               Text="{Binding StoredItemCount, StringFormat={}{0} 个项目}" />
+                    <Button Grid.Column="2"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="关闭全部图标"
+                            Click="OnCloseButtonClick"
+                            Style="{StaticResource CloseButtonStyle}"
+                            ToolTip="关闭">
+                        <TextBlock FontFamily="Segoe MDL2 Assets"
+                                   FontSize="8"
+                                   Text="&#xE8BB;" />
+                    </Button>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1"
+                          Margin="12"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto"
+                          PanningMode="VerticalOnly"
+                          AutomationProperties.Name="全部图标滚动区">
+                <ItemsControl ItemsSource="{Binding AllItemTiles}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button AutomationProperties.Name="{Binding AutomationName}"
+                                    Click="OnIconTileClick"
+                                    Style="{StaticResource ExpandedTileButtonStyle}"
+                                    ToolTip="{Binding AutomationName}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="20" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Image Width="40"
+                                               Height="40"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               RenderOptions.BitmapScalingMode="HighQuality"
+                                               Source="{Binding Icon}"
+                                               Stretch="Uniform">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HasIcon}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="Segoe MDL2 Assets"
+                                                   FontSize="40"
+                                                   Text="{Binding Glyph}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HasIcon}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontFamily="Microsoft YaHei UI"
+                                               FontSize="11"
+                                               Text="{Binding Label}"
+                                               TextAlignment="Center"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <TextBlock Grid.Row="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontFamily="Microsoft YaHei UI"
+                       FontSize="14"
+                       Foreground="#D9FFFFFF"
+                       IsHitTestVisible="False"
+                       Text="暂无图标">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding StoredItemCount}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+TestResults/
+artifacts/release/
+artifacts/release-work/
+artifacts/publish-capability-check/
+artifacts/stage*-ui-smoke-*/
+
+# Locally generated release binaries are uploaded as GitHub Release assets.
+DesktopOrganizer-Setup-*.exe
+DesktopOrganizer-*-win-x64-portable.exe

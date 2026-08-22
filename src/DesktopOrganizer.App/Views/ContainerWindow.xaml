@@ -1,0 +1,197 @@
+<Window x:Class="DesktopOrganizer.App.Views.ContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Name}"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="False"
+        ResizeMode="NoResize"
+        AllowDrop="True"
+        WindowStartupLocation="CenterScreen"
+        PreviewDragEnter="OnPreviewDragEnter"
+        PreviewDragOver="OnPreviewDragOver"
+        PreviewDragLeave="OnPreviewDragLeave"
+        Drop="OnDrop"
+        PreviewMouseRightButtonUp="OnWindowPreviewMouseRightButtonUp"
+        Closing="OnWindowClosing"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+    <Window.Resources>
+        <ContextMenu x:Key="ContainerContextMenu"
+                     DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+            <MenuItem Header="尺寸">
+                <MenuItem Header="2 x 2"
+                          IsCheckable="True"
+                          IsChecked="{Binding IsTwoByTwo, Mode=OneWay}"
+                          Command="{Binding SetTwoByTwoCommand}" />
+                <MenuItem Header="1 x 4"
+                          IsCheckable="True"
+                          IsChecked="{Binding IsOneByFour, Mode=OneWay}"
+                          Command="{Binding SetOneByFourCommand}" />
+                <MenuItem Header="2 x 4"
+                          IsCheckable="True"
+                          IsChecked="{Binding IsTwoByFour, Mode=OneWay}"
+                          Command="{Binding SetTwoByFourCommand}" />
+            </MenuItem>
+            <MenuItem Header="方向"
+                      IsEnabled="{Binding SupportsOrientation}">
+                <MenuItem Header="横向"
+                          IsCheckable="True"
+                          IsChecked="{Binding IsHorizontal, Mode=OneWay}"
+                          Command="{Binding SetHorizontalCommand}" />
+                <MenuItem Header="纵向"
+                          IsCheckable="True"
+                          IsChecked="{Binding IsVertical, Mode=OneWay}"
+                          Command="{Binding SetVerticalCommand}" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="设置"
+                      Click="OnSettingsMenuItemClick" />
+            <MenuItem Header="隐藏收纳区"
+                      Click="OnHideMenuItemClick" />
+            <MenuItem Header="关闭收纳区"
+                      Click="OnCloseMenuItemClick" />
+        </ContextMenu>
+    </Window.Resources>
+
+    <Border BorderBrush="{Binding ContainerBorderBrush}"
+            BorderThickness="{Binding ContainerBorderThickness}"
+            Background="{Binding ContainerBackgroundBrush}"
+            CornerRadius="8"
+            MouseLeftButtonDown="OnContainerMouseLeftButtonDown">
+        <Grid>
+            <ItemsControl ItemsSource="{Binding Tiles}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="{Binding Rows}"
+                                     Columns="{Binding Columns}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type ContentPresenter}">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button AutomationProperties.Name="{Binding AutomationName}"
+                                Click="OnIconTileClick"
+                                Style="{StaticResource TileButtonStyle}"
+                                ToolTip="{Binding AutomationName}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="18" />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <Image Width="{Binding DataContext.IconGlyphSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                                           Height="{Binding DataContext.IconGlyphSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           Source="{Binding Icon}"
+                                           Stretch="Uniform">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasIcon}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontFamily="Segoe MDL2 Assets"
+                                               FontSize="{Binding DataContext.IconGlyphSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                                               Text="{Binding Glyph}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasIcon}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                                <TextBlock Grid.Row="1"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontFamily="Microsoft YaHei UI"
+                                           FontSize="11"
+                                           Text="{Binding Label}"
+                                           TextAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Border x:Name="DropOverlay"
+                    Panel.ZIndex="2"
+                    Margin="4"
+                    Background="#D92A3F5F"
+                    BorderBrush="#FFFFFFFF"
+                    BorderThickness="2"
+                    CornerRadius="5"
+                    IsHitTestVisible="False"
+                    Visibility="Collapsed">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="28"
+                               Foreground="White"
+                               Text="&#xE710;" />
+                    <TextBlock Margin="0,5,0,0"
+                               HorizontalAlignment="Center"
+                               FontFamily="Microsoft YaHei UI"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               Text="添加到收纳区" />
+                </StackPanel>
+            </Border>
+
+            <Border x:Name="ImportStatus"
+                    Panel.ZIndex="3"
+                    Margin="8"
+                    Padding="8,5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Background="#E6212B3B"
+                    CornerRadius="4"
+                    IsHitTestVisible="False"
+                    Visibility="Collapsed">
+                <TextBlock x:Name="ImportStatusText"
+                           FontFamily="Microsoft YaHei UI"
+                           FontSize="11"
+                           Foreground="White"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Border>
+
+            <Button Panel.ZIndex="1"
+                    Margin="0,3,3,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    AutomationProperties.Name="关闭收纳区"
+                    Click="OnCloseButtonClick"
+                    Style="{StaticResource CloseButtonStyle}"
+                    ToolTip="关闭收纳区">
+                <TextBlock FontFamily="Segoe MDL2 Assets"
+                           FontSize="8"
+                           Text="&#xE8BB;" />
+            </Button>
+        </Grid>
+    </Border>
+</Window>

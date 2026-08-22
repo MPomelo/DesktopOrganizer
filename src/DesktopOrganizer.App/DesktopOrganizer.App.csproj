@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>DesktopOrganizer</AssemblyName>
+    <RootNamespace>DesktopOrganizer.App</RootNamespace>
+    <Product>DesktopOrganizer</Product>
+    <Version>1.0.0</Version>
+    <Authors>Pomelo</Authors>
+    <Company>DesktopOrganizer</Company>
+    <Description>Windows 10/11 desktop icon organizer</Description>
+    <ApplicationIcon>Assets\DesktopOrganizer.ico</ApplicationIcon>
+  </PropertyGroup>
+
+</Project>

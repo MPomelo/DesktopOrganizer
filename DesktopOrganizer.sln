@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopOrganizer.App", "src\DesktopOrganizer.App\DesktopOrganizer.App.csproj", "{64E4C7D8-86ED-4D5C-976D-A7A8E85BA77D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopOrganizer.Tests", "tests\DesktopOrganizer.Tests\DesktopOrganizer.Tests.csproj", "{11E70ADF-3B7F-485D-881D-2F29FB06DE93}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64E4C7D8-86ED-4D5C-976D-A7A8E85BA77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E4C7D8-86ED-4D5C-976D-A7A8E85BA77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E4C7D8-86ED-4D5C-976D-A7A8E85BA77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E4C7D8-86ED-4D5C-976D-A7A8E85BA77D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11E70ADF-3B7F-485D-881D-2F29FB06DE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11E70ADF-3B7F-485D-881D-2F29FB06DE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11E70ADF-3B7F-485D-881D-2F29FB06DE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11E70ADF-3B7F-485D-881D-2F29FB06DE93}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

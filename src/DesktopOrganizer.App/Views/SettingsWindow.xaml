@@ -1,0 +1,276 @@
+<Window x:Class="DesktopOrganizer.App.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DesktopOrganizer 设置"
+        Width="960"
+        Height="680"
+        MinWidth="800"
+        MinHeight="560"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        AutomationProperties.Name="收纳区设置"
+        Closing="OnWindowClosing"
+        FontFamily="Microsoft YaHei UI"
+        Background="#FFF4F5F7"
+        Foreground="#FF20242A">
+    <Window.Resources>
+        <Style x:Key="SectionTitleStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+        <Style x:Key="FieldLabelStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#FF4D5560" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="IconToolButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Margin" Value="2,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style x:Key="ColorModeComboStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Width" Value="96" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="64" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Padding="20,12" Background="White"
+                BorderBrush="#FFD9DDE3" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="280" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="0,0,16,0" VerticalAlignment="Center"
+                           FontSize="18" FontWeight="SemiBold" Text="收纳区设置" />
+                <TextBox Grid.Column="1" Height="34" Padding="8,5"
+                         VerticalContentAlignment="Center"
+                         AutomationProperties.Name="收纳区名称"
+                         MaxLength="60"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="20,18">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="图标管理" />
+                    <TextBlock Grid.Column="1" Margin="12,2,0,0" FontSize="12"
+                               Foreground="#FF5C6570" Text="{Binding PinnedSummary}" />
+                </Grid>
+
+                <ListBox x:Name="IconList" Grid.Row="1"
+                         ItemsSource="{Binding IconItems}" AllowDrop="True"
+                         AutomationProperties.Name="图标管理列表"
+                         PreviewMouseLeftButtonDown="OnIconListPreviewMouseLeftButtonDown"
+                         PreviewMouseMove="OnIconListPreviewMouseMove"
+                         Drop="OnIconListDrop"
+                         BorderBrush="#FFD6DAE0" BorderThickness="1"
+                         Background="White"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="54" Margin="6,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="24" />
+                                    <ColumnDefinition Width="42" />
+                                    <ColumnDefinition Width="34" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="62" />
+                                    <ColumnDefinition Width="102" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets"
+                                           FontSize="14" Foreground="#FF78818C"
+                                           Text="&#xE700;" ToolTip="拖动排序" />
+                                <Grid Grid.Column="1">
+                                    <Image Width="28" Height="28" Source="{Binding Icon}" Stretch="Uniform">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasIcon}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               FontFamily="Segoe MDL2 Assets" FontSize="26" Text="{Binding Glyph}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HasIcon}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                                <CheckBox Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          AutomationProperties.Name="外露图标"
+                                          IsChecked="{Binding IsPinned, Mode=TwoWay}" ToolTip="外露显示" />
+                                <TextBox Grid.Column="3" Margin="4,10" Padding="6,2"
+                                         VerticalContentAlignment="Center"
+                                         AutomationProperties.Name="图标名称" MaxLength="100"
+                                         Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontSize="11" Foreground="#FF6C7580" Text="{Binding KindLabel}" />
+                                <StackPanel Grid.Column="5" HorizontalAlignment="Right"
+                                            VerticalAlignment="Center" Orientation="Horizontal">
+                                    <Button AutomationProperties.Name="上移图标" Command="{Binding MoveUpCommand}"
+                                            Style="{StaticResource IconToolButtonStyle}" ToolTip="上移">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74A;" />
+                                    </Button>
+                                    <Button AutomationProperties.Name="下移图标" Command="{Binding MoveDownCommand}"
+                                            Style="{StaticResource IconToolButtonStyle}" ToolTip="下移">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74B;" />
+                                    </Button>
+                                    <Button AutomationProperties.Name="删除图标" Command="{Binding DeleteCommand}"
+                                            Style="{StaticResource IconToolButtonStyle}" ToolTip="删除">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Foreground="#FFB23A3A" Text="&#xE74D;" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Border Grid.Column="1" Background="#FFD9DDE3" />
+
+            <ScrollViewer Grid.Column="2" Padding="20,18"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="布局" />
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="尺寸" />
+                        <ComboBox Grid.Column="1" Height="32" AutomationProperties.Name="收纳区尺寸"
+                                  DisplayMemberPath="DisplayName" ItemsSource="{Binding SizeOptions}"
+                                  SelectedValue="{Binding SizeMode}" SelectedValuePath="Value" />
+                    </Grid>
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="方向" />
+                        <ComboBox Grid.Column="1" Height="32" AutomationProperties.Name="收纳区方向"
+                                  DisplayMemberPath="DisplayName" IsEnabled="{Binding SupportsOrientation}"
+                                  ItemsSource="{Binding OrientationOptions}" SelectedValue="{Binding Orientation}"
+                                  SelectedValuePath="Value" />
+                    </Grid>
+
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="材质" />
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="*" /><ColumnDefinition Width="48" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="边框粗细" />
+                        <Slider Grid.Column="1" Minimum="1" Maximum="12" TickFrequency="1"
+                                IsSnapToTickEnabled="True" AutomationProperties.Name="边框粗细"
+                                Value="{Binding BorderThickness}" />
+                        <TextBlock Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                   Text="{Binding BorderThickness, StringFormat={}{0:0} px}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="*" /><ColumnDefinition Width="48" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="背景透明度" />
+                        <Slider Grid.Column="1" Minimum="0.15" Maximum="0.9" TickFrequency="0.05"
+                                IsSnapToTickEnabled="True" AutomationProperties.Name="背景透明度"
+                                Value="{Binding BackgroundOpacity}" />
+                        <TextBlock Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                   Text="{Binding BackgroundOpacity, StringFormat={}{0:P0}}" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="32" /><ColumnDefinition Width="104" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="边框颜色" />
+                        <Border Grid.Column="1" Width="22" Height="22" BorderBrush="#FF9AA2AC" BorderThickness="1" Background="{Binding BorderPreviewBrush}" />
+                        <ComboBox Grid.Column="2" AutomationProperties.Name="边框颜色模式" DisplayMemberPath="DisplayName" ItemsSource="{Binding ColorModeOptions}" SelectedValue="{Binding BorderColor.Mode}" SelectedValuePath="Value" Style="{StaticResource ColorModeComboStyle}" />
+                        <TextBox Grid.Column="3" Height="30" Margin="8,0,0,0" Padding="6,3" AutomationProperties.Name="边框颜色值" IsEnabled="{Binding BorderColor.IsCustom}" Text="{Binding BorderColor.HexColor, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="32" /><ColumnDefinition Width="104" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="背景颜色" />
+                        <Border Grid.Column="1" Width="22" Height="22" BorderBrush="#FF9AA2AC" BorderThickness="1" Background="{Binding BackgroundPreviewBrush}" />
+                        <ComboBox Grid.Column="2" AutomationProperties.Name="背景颜色模式" DisplayMemberPath="DisplayName" ItemsSource="{Binding ColorModeOptions}" SelectedValue="{Binding BackgroundColor.Mode}" SelectedValuePath="Value" Style="{StaticResource ColorModeComboStyle}" />
+                        <TextBox Grid.Column="3" Height="30" Margin="8,0,0,0" Padding="6,3" AutomationProperties.Name="背景颜色值" IsEnabled="{Binding BackgroundColor.IsCustom}" Text="{Binding BackgroundColor.HexColor, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="32" /><ColumnDefinition Width="104" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="三点颜色" />
+                        <Border Grid.Column="1" Width="22" Height="22" BorderBrush="#FF9AA2AC" BorderThickness="1" Background="{Binding MoreButtonPreviewBrush}" />
+                        <ComboBox Grid.Column="2" AutomationProperties.Name="三点颜色模式" DisplayMemberPath="DisplayName" ItemsSource="{Binding ColorModeOptions}" SelectedValue="{Binding MoreButtonColor.Mode}" SelectedValuePath="Value" Style="{StaticResource ColorModeComboStyle}" />
+                        <TextBox Grid.Column="3" Height="30" Margin="8,0,0,0" Padding="6,3" AutomationProperties.Name="三点颜色值" IsEnabled="{Binding MoreButtonColor.IsCustom}" Text="{Binding MoreButtonColor.HexColor, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,18">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="90" /><ColumnDefinition Width="32" /><ColumnDefinition Width="104" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="悬停颜色" />
+                        <Border Grid.Column="1" Width="22" Height="22" BorderBrush="#FF9AA2AC" BorderThickness="1" Background="{Binding HoverPreviewBrush}" />
+                        <ComboBox Grid.Column="2" AutomationProperties.Name="悬停颜色模式" DisplayMemberPath="DisplayName" ItemsSource="{Binding ColorModeOptions}" SelectedValue="{Binding HoverBackgroundColor.Mode}" SelectedValuePath="Value" Style="{StaticResource ColorModeComboStyle}" />
+                        <TextBox Grid.Column="3" Height="30" Margin="8,0,0,0" Padding="6,3" AutomationProperties.Name="悬停颜色值" IsEnabled="{Binding HoverBackgroundColor.IsCustom}" Text="{Binding HoverBackgroundColor.HexColor, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Button Width="142" Height="32" HorizontalAlignment="Left"
+                            AutomationProperties.Name="恢复系统主题"
+                            Click="OnRestoreSystemThemeClick" Content="恢复系统主题" />
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <Border Grid.Row="2" Padding="20,12" Background="White"
+                BorderBrush="#FFD9DDE3" BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <Button Width="164" Height="34" HorizontalAlignment="Left"
+                        AutomationProperties.Name="彻底退出收纳区"
+                        Click="OnFullExitClick" Content="彻底退出收纳区"
+                        Foreground="#FFB23030" BorderBrush="#FFD18A8A" />
+                <TextBlock Grid.Column="1" Margin="16,0" VerticalAlignment="Center" FontSize="12" Foreground="#FFB23030"
+                           Text="{Binding ValidationMessage}" TextTrimming="CharacterEllipsis" />
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Width="88" Height="34" Margin="0,0,10,0"
+                            AutomationProperties.Name="取消设置" Click="OnCancelClick" Content="取消" />
+                    <Button x:Name="SaveButton" Width="88" Height="34"
+                            AutomationProperties.Name="保存设置" Click="OnSaveClick"
+                            Content="保存" IsDefault="True" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
